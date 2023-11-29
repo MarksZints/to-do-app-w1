@@ -1,53 +1,54 @@
 //source: https://codepen.io/JohnPaulFich/pen/MXmzzM
-var enterButton = document.getElementById("enter");
-enterButton.addEventListener("click", addListAfterClick);
+const darbinatPogu=document.getElementById("poga");
+darbinatPogu.addEventListener("click", sajauktDatus);
 
-var input = document.getElementById("userInput");
 
-var ul = document.querySelector("ul");
+const kopa=["https://upload.wikimedia.org/wikipedia/lv/thumb/b/b8/Smiltenes_vidusskola.jpg/1200px-Smiltenes_vidusskola.jpg",
+"https://upload.wikimedia.org/wikipedia/lv/thumb/b/b8/Smiltenes_vidusskola.jpg/1200px-Smiltenes_vidusskola.jpg",
+"https://static.lsm.lv/media/2021/06/large/1/ffi2.jpg",
+"https://static.lsm.lv/media/2021/06/large/1/ffi2.jpg",
+"https://api.delfi.lv/media-api-image-cropper/v1/e8bbfeb0-7cdb-11ed-8846-9995931d2a47.jpg?w=576&h=313.jpg",
+"https://api.delfi.lv/media-api-image-cropper/v1/e8bbfeb0-7cdb-11ed-8846-9995931d2a47.jpg?w=576&h=313.jpg",
+"https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/NR-1Titulbilde.tif/lossy-page1-1200px-NR-1Titulbilde.tif.jpg",
+"https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/NR-1Titulbilde.tif/lossy-page1-1200px-NR-1Titulbilde.tif.jpg"];
 
-function inputLength() {
-  return input.value.length;
+const kopaPrieksa=["https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Card_back_01.svg/703px-Card_back_01.svg.png"];
+
+const kopasgarums = kopa.length;
+const tabulina = document.getElementById("tabula");
+const sunas = tabulina.getElementsByTagName('td');
+
+function sajauktDatus() {
+    for (let i = 0; i < sunas.length; i++) {
+        sunas[i].innerHTML = "";
+      }
+      
+    for (let i = 0; i < kopasgarums; i++) {
+        const randomIndex = Math.floor(Math.random() * (i + 1));
+        [kopa[i], kopa[randomIndex]] = [kopa[randomIndex], kopa[i]];
+    }
+
+    for (let i = 0; i < kopasgarums; i++) {
+        // Izveido div elementu, lai noteiktu izmēru kārtij;
+        let div=document.createElement("div");
+        div.classList.add("kartina");
+        //izveidojam vēl vienu div, kas kalpos kā kārts priekšpuse
+        let kartsPrieksa=document.createElement("div");
+        kartsPrieksa.classList.add("kartina");
+        let bildePrieksa=document.createElement("img");
+        bildePrieksa.setAttribute("src",kopaPrieksa[0]);
+        bildePrieksa.classList.add("bildes");
+        kartsPrieksa.appendChild(bildePrieksa);
+        //izveidojam div, kas kalpos kā kārts aizmugure
+        let kartsAizmugure=document.createElement("div");
+        kartsAizmugure.classList.add("kartina");
+        let bildeAizmugure=document.createElement("img");
+        bildeAizmugure.setAttribute("src", kopa[i]);
+        bildeAizmugure.classList.add("bildes");
+        kartsAizmugure.appendChild(bildeAizmugure);
+
+        div.appendChild(kartsPrieksa,kartsAizmugure);
+        sunas[i].appendChild(div);
+    }
 }
 
-function addListAfterClick() {
-  if (inputLength() > 0) {
-    //makes sure that an empty input field doesn't create a li
-    createListElement();
-  }
-}
-
-function createListElement() {
-  var li = document.createElement("li"); // creates an element "li"
-  li.appendChild(document.createTextNode(input.value)); //makes text from input field the li text
-  li.classList.add(
-    "list-group-item",
-    "d-flex",
-    "justify-content-between",
-    "align-items-start"
-  );
-  ul.appendChild(li); //adds li to ul
-  input.value = ""; //Reset text input field
-
-  //START STRIKETHROUGH
-  // because it's in the function, it only adds it for new items
-  function crossOut() {
-    li.classList.toggle("done");
-  }
-  li.addEventListener("click", crossOut);
-  //END STRIKETHROUGH
-
-  // START ADD DELETE BUTTON
-  var dBtn = document.createElement("button");
-  dBtn.appendChild(document.createTextNode("X"));
-  dBtn.classList.add("btn", "btn-secondary", "btn-sm");
-  li.appendChild(dBtn);
-  dBtn.addEventListener("click", deleteListItem);
-  // END ADD DELETE BUTTON
-
-  //ADD CLASS DELETE (DISPLAY: NONE)
-  function deleteListItem() {
-    li.classList.add("delete");
-  }
-  //END ADD CLASS DELETE
-}
